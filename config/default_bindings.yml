@@ -43,4 +43,10 @@ constructed:
     name: '0'
   - !Counter
     name: s
-
+simple:
+  - !Full
+    name: life
+    bind_up: '+'
+    bind_down: '-'
+    start_at: 20
+ 
