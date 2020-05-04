@@ -1,0 +1,46 @@
+---
+edh: 
+  - !Full
+    name: life
+    bind_up: '+'
+    bind_down: '-'
+    start_at: 40
+  - !Full
+    name: cast
+    bind_up: '*'
+    bind_down: null
+  - !Counter
+    name: w
+  - !Counter
+    name: u
+  - !Counter
+    name: b
+  - !Counter
+    name: r
+  - !Counter
+    name: g
+  - !Counter
+    name: '0'
+  - !Counter
+    name: s
+constructed:
+  - !Full
+    name: life
+    bind_up: '+'
+    bind_down: '-'
+    start_at: 20
+  - !Counter
+    name: w
+  - !Counter
+    name: u
+  - !Counter
+    name: b
+  - !Counter
+    name: r
+  - !Counter
+    name: g
+  - !Counter
+    name: '0'
+  - !Counter
+    name: s
+
