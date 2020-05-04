@@ -1,7 +1,7 @@
 import sys,os,argparse,logging
 import keyboard
-import output
-import config
+import listener.output as output
+import listener.config as config
 
 class GameState(object):
 	
@@ -37,7 +37,7 @@ def output_handler(path):
 	return output.FileOutput(path) 
 	
 def main():
-	default_bindings_path = os.path.join(os.path.dirname(__file__), 'default_bindings.yml')
+	default_bindings_path = os.path.join('default_bindings.yml')
 
 	parser = argparse.ArgumentParser(description="Use keyboard shortcuts to maintain the global state counters in Magic: the Gathering")
 	parser.add_argument('-f', '--format', metavar='FMT', default='edh', help='selects the format of the game')
@@ -50,6 +50,3 @@ def main():
 		GameState(cfg[args.format], args.output).listen()
 	except config.ConfigError as err:
 		logging.error("Failed to load config, exitting.")
-
-if __name__ == "__main__":
-	main()
