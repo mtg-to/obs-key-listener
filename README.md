@@ -60,6 +60,5 @@ Recommended usage:
 pyinstaller cli.py --onefile --name listener
 ```
 
-The wizard installation is created using [Inno Setup](https://jrsoftware.org/isinfo.php). Sample installation script config is available under `innosetup/setup.iss`.
-At this moment it has hardcoded paths, until I work out how to parametrize them.
+The wizard installation is created using [Inno Setup](https://jrsoftware.org/isinfo.php). Installation script config is available under `innosetup/setup.iss`.
 

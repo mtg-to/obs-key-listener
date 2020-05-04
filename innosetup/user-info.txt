@@ -1,0 +1,12 @@
+Dear User!
+
+The installer has created a launcher in your Start Menu and you might have chosen to install a desktop shortcut.
+
+You must "Run as Administrator" for this application to work as expected!
+
+If you'd like to experiment with the capabilities, which you're very welcome to do, you can execute the application from the commandline and tweak the parameters.
+
+To obtain detailed usage information you can open a console, navigate to your installation directory and launch:
+
+"listener.exe -h"
+

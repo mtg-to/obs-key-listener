@@ -20,7 +20,8 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-; InfoAfterFile="D:\workspace\mtg-to\obs-key-listener\innosetup\user-info.txt"
+InfoAfterFile="{#SourcePath}\user-info.txt"
+LicenseFile="{#SourcePath}\..\LICENSE.txt"
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=D:\workspace\mtg-to\obs-key-listener\innosetup
@@ -36,8 +37,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\workspace\mtg-to\obs-key-listener\dist\listener.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\workspace\mtg-to\obs-key-listener\config\*"; DestDir: "{commonappdata}\{#MyAppName}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourcePath}\..\dist\listener.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\..\config\*"; DestDir: "{commonappdata}\{#MyAppName}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
