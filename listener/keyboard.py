@@ -1,5 +1,7 @@
-import logging
 import keyboard
+
+def _help(key, text):
+	print('\t%s: %s' % (key.ljust(12), text))
 
 class Listener(object):
 	
@@ -11,11 +13,11 @@ class Listener(object):
 	def listen(self):
 		[ self._add_hotkey(k, f, help_text) for sub in self._bindings for k,f,help_text in sub ]
 		self._add_hotkey('ctrl + r', self.reset, 'Reset All');
-		logging.info('ctrl + q: quit')
+		_help('ctrl + q', 'quit')
 		keyboard.wait('ctrl + q')
 	
 	def _add_hotkey(self, k, f, help_text):
-		logging.info('%s: %s' % (k, help_text))
+		_help(k, help_text)
 		keyboard.add_hotkey(k, lambda : self._update(f))
 
 	def _update(self, f):
