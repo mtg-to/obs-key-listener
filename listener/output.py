@@ -2,8 +2,7 @@ class StdOutOutput:
 
 	def record(self, state):
 		print("Game State: ")
-		for k,v in state.items():
-			print(k + ': ' + str(v))
+		[print(s.serialize()) for s in state]
 		
 
 
@@ -14,4 +13,4 @@ class FileOutput:
 
 	def record(self, state):
 		with open(self._path, 'w') as f:
-			f.writelines(["%s: %d\n" % (k,v) for k,v in state.items()])
+			f.writelines(['%s\n' % s.serialize() for s in state])

@@ -2,35 +2,7 @@ import sys,os,argparse,logging
 import keyboard
 import listener.output as output
 import listener.config as config
-
-class GameState(object):
-	
-	def __init__(self, bindings, outputs):
-		self.bindings = bindings
-		self._outputs = outputs
-		self.reset()
-
-	def listen(self):
-		keyboard.add_hotkey('ctrl + alt + r', self.reset)
-		[ b.register(self) for b in self.bindings ]
-		keyboard.wait('ctrl + q')
-
-	def reset(self):
-		self.state = {b.get_name(): b.get_start_at() for b in self.bindings}
-		self.record()
-
-	def adjust(self, k, v):
-		old = self.state.get(k)
-		if old is not None:
-			self.state[k] = old + v
-			self.record()
-
-	def set(self, k, v):
-		self.state[k] = v
-		self.record()
-
-	def record(self):
-		[o.record(self.state) for o in self._outputs]
+from listener.keyboard import Listener
 
 def output_handler(path):
 	logging.info("Writing to file: %s", path)
@@ -47,6 +19,6 @@ def main():
 
 	try:
 		cfg = config.parse_yaml(args.config)
-		GameState(cfg[args.format], args.output).listen()
+		Listener(cfg[args.format], args.output).listen()
 	except config.ConfigError as err:
 		logging.error("Failed to load config, exitting.")

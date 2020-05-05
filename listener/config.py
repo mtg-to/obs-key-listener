@@ -2,6 +2,38 @@ import logging
 import keyboard
 import yaml
 
+class StateFactory(object):
+
+	def get_bindings(self):
+		raise NotImplementedError()
+
+class State(object):
+	
+	def serialize(self):
+		raise NotImplementedError()
+
+	def reset(self):
+		raise NotImplementedError()
+
+class _Counter(State):
+
+	def __init__(self, name, zero = 0):
+		self._name = name
+		self._zero = zero
+		self._value = zero
+		
+	def inc(self):
+		self._value += 1
+
+	def dec(self):
+		self._value -= 1
+
+	def reset(self):
+		self._value = self._zero
+
+	def serialize(self):
+		return '%s: %d' % (self._name, self._value)
+
 def yamlobj(tag):
     def wrapper(cls):
         def constructor(loader, node):
@@ -12,7 +44,7 @@ def yamlobj(tag):
     return wrapper
 
 @yamlobj('!Full')
-class Binding(yaml.YAMLObject):
+class _CounterBinding(yaml.YAMLObject, StateFactory):
 
 	def __init__(self, name, bind_up, bind_down, bind_reset=None, start_at=0):
 		self.name = name
@@ -20,32 +52,23 @@ class Binding(yaml.YAMLObject):
 		self.bind_down = bind_down
 		self.bind_reset = bind_reset
 		self.start_at = start_at
-	
-	def get_name(self):
-		return self.name
-	
-	def get_start_at(self):
-		return self.start_at
 
-	def register(self, gs):
-		self._register(gs.adjust, self.bind_up, 1)
-		self._register(gs.adjust, self.bind_down, -1)
-		self._register(gs.set, self.bind_reset, self.start_at)
-
-	def _register(self, func, hotkey, val):
-		if hotkey is not None:
-			print('Press (' + hotkey + ') to adjust "' + self.name + '" by ' + str(val))
-			keyboard.add_hotkey(hotkey, func, args=(self.name, val))
+	def get_bindings(self):
+		counter = _Counter(self.name, self.start_at)
+		bindings = []
+		if self.bind_up: bindings.append((self.bind_up, counter.inc, 'Increment %s' % self.name))
+		if self.bind_down: bindings.append((self.bind_down, counter.dec, 'Decrement %s' % self.name))
+		if self.bind_reset: bindings.append((self.bind_reset, counter.reset, 'Reset %s' % self.name))
+		return (counter, bindings)
+				
 
 @yamlobj('!Counter')
-class DefaultBinding(Binding):
-
-	default_mod = 'ctrl'
+class _DefaultCounterBinding(_CounterBinding):
 
 	def __init__(self, name, start_at=0):
-		bind_up = " + ".join((self.default_mod, name[0], 'plus'))
-		bind_down = " + ".join((self.default_mod, name[0], '-'))
-		bind_reset = " + ".join((self.default_mod, name[0], '/'))
+		bind_up = ' + '.join((name[0], 'plus'))
+		bind_down = ' + '.join((name[0], '-'))
+		bind_reset = ' + '.join((name[0], '/'))
 		super().__init__(name, bind_up, bind_down, bind_reset, start_at)
 
 class ConfigError(Exception):
@@ -53,13 +76,13 @@ class ConfigError(Exception):
 
 
 def parse_yaml(path):
-	logging.info("Reading config from: %s", path)
+	logging.info('Reading config from: %s', path)
 	try:
 		return yaml.full_load(open(path, 'r'))
 	except yaml.YAMLError as ye:
-		logging.error("Malformed config: %s", ye)
+		logging.error('Malformed config: %s', ye)
 		raise ConfigError()
 	except IOError as ioe:
-		logging.error("Could not read config file: %s", ioe)
+		logging.error('Could not read config file: %s', ioe)
 		raise ConfigError()
 
