@@ -11,7 +11,7 @@ class GameState(object):
 		self.reset()
 
 	def listen(self):
-		keyboard.add_hotkey('ctrl + r', self.reset)
+		keyboard.add_hotkey('ctrl + alt + r', self.reset)
 		[ b.register(self) for b in self.bindings ]
 		keyboard.wait('ctrl + q')
 
