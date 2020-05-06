@@ -1,7 +1,7 @@
 import keyboard
 
 def _help(key, text):
-	print('\t%s: %s' % (key.ljust(12), text))
+	print('\t%s: %s' % (key.ljust(16), text))
 
 class Listener(object):
 	

@@ -1,0 +1,41 @@
+---
+vampire: 
+# - !Caption
+#   name: Your Character
+  - !Bar
+    name: Hunger
+    total: 5
+    starting: 1
+    bind_gain: 'h + plus'
+    bind_use: 'h + -'
+  - !MultiBar
+    name: Damage 
+    total: 5
+    groups:
+      - starting: 0
+        bind_gain: 'ctrl + d + plus'
+        bind_use: 'ctrl + d + -'
+        full: '[X]'
+      - starting: 0
+        bind_gain: 'd + plus'
+        bind_use: 'd + -'
+        full: '[\]'
+  - !Bar
+    name: Willpower 
+    total: 3
+    starting: 3
+    bind_gain: 'w + plus'
+    bind_use: 'w + -'
+  - !MultiBar
+    name: Humanity 
+    total: 10
+    empty: '[\]'
+    groups:
+      - starting: 6
+        bind_gain: 'u + plus'
+        bind_use: 'u + -'
+        full: '[0]'
+      - starting: 4
+        bind_gain: 'ctrl + u + plus'
+        bind_use: 'ctrl + u + -'
+        full: '[ ]'
