@@ -42,9 +42,15 @@ Lis=Listener
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Types]
+Name: full; Description: "All games"
+Name: magic; Description: "Magic: the Gathering"
+Name: vampire; Description: "Vampire: the Masquerade"
+Name: custom; Description: "Pick your Poison"; Flags: iscustom
+
 [Components]
-Name: vampire; Description: "Setup for Vampire: the Masquerade"
-Name: magic; Description: "Setup for M:tG over WebCam"
+Name: vampire; Description: "Setup for Vampire: the Masquerade"; Types: full vampire custom
+Name: magic; Description: "Setup for M:tG over WebCam"; Types: full magic custom
 
 [Tasks]
 Name: "vampire"; Description: "Desktop Shortcut for Vampire"; GroupDescription: "{cm:OptForVtm}"; Flags: unchecked; Components: vampire

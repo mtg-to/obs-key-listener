@@ -1,5 +1,4 @@
 import logging, functools
-import keyboard
 import yaml
 
 class _BindingsBuilder(object):
@@ -93,13 +92,13 @@ class _Counter(State):
 		return '%s: %d' % (self._name, self._value)
 
 def yamlobj(tag):
-    def wrapper(cls):
-        def constructor(loader, node):
-            fields = loader.construct_mapping(node, deep=True)
-            return cls(**fields)
-        yaml.add_constructor(tag, constructor)
-        return cls
-    return wrapper
+	def wrapper(cls):
+		def constructor(loader, node):
+			fields = loader.construct_mapping(node, deep=True)
+			return cls(**fields)
+		yaml.add_constructor(tag, constructor)
+		return cls
+	return wrapper
 
 @yamlobj('!Caption')
 class _CaptionBinding(yaml.YAMLObject, StateFactory):
@@ -166,17 +165,19 @@ class _DefaultCounterBinding(_CounterBinding):
 		super().__init__(name, bind_up, bind_down, bind_reset, start_at)
 
 class ConfigError(Exception):
-	pass
-
-
+	
+	def __init__(self, message):
+		super().__init__(message)
+		self.message = message
+		
 def parse_yaml(path):
 	logging.info('Reading config from: %s', path)
 	try:
 		return yaml.full_load(open(path, 'r'))
 	except yaml.YAMLError as ye:
 		logging.error('Malformed config: %s', ye)
-		raise ConfigError()
+		raise ConfigError(str(ye))
 	except IOError as ioe:
 		logging.error('Could not read config file: %s', ioe)
-		raise ConfigError()
+		raise ConfigError(str(ioe))
 

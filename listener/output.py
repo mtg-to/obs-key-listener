@@ -4,8 +4,14 @@ class StdOutOutput:
 		print("Game State: ")
 		[print(s.serialize()) for s in state]
 		
-
-
+class TextCallbackOutput:
+	
+	def __init__(self, callback):
+		self._callback = callback
+		
+	def record(self, state):
+		self._callback("\n".join([s.serialize() for s in state]))
+		
 class FileOutput:
 
 	def __init__(self, path):
