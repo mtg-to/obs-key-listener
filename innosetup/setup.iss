@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OBS Key Listener"
-#define MyAppVersion "0.3"
+#define MyAppVersion "1.0"
 #define MyAppPublisher "Piotr Berlowski"
 #define MyAppURL "https://github.com/mtg-to/obs-key-listener"
 #define MyAppExeName "listener.exe"
@@ -32,31 +32,34 @@ WizardStyle=modern
 
 [CustomMessages]
 OptForMtg=Options for Magic: the Gathering
-OptForVtm=Options for Vampire: the Maquerade
+OptForVtm=Options for Vampire: the Maquerade  
 ForEDH=for (c)EDH
 ForCons=for non-EDH constructed (20 life)
 Simple=Simple EDH
 ForVtm=for Vampire
 Lis=Listener
+GUI=GUI
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Types]
-Name: full; Description: "All games"
-Name: magic; Description: "Magic: the Gathering"
-Name: vampire; Description: "Vampire: the Masquerade"
+Name: gui; Description: "Listener with User Interface"
+Name: magic; Description: "Command Line - Magic: the Gathering"
+Name: vampire; Description: "Command Line - Vampire: the Masquerade"
 Name: custom; Description: "Pick your Poison"; Flags: iscustom
 
 [Components]
-Name: vampire; Description: "Setup for Vampire: the Masquerade"; Types: full vampire custom
-Name: magic; Description: "Setup for M:tG over WebCam"; Types: full magic custom
+Name: gui; Description: "graphical user interface"; Types: gui custom
+Name: vampire; Description: "Setup for Vampire: the Masquerade"; Types: vampire custom
+Name: magic; Description: "Setup for M:tG over WebCam"; Types: magic custom
 
 [Tasks]
-Name: "vampire"; Description: "Desktop Shortcut for Vampire"; GroupDescription: "{cm:OptForVtm}"; Flags: unchecked; Components: vampire
-Name: "magicedh"; Description: "Desktop Shortcut for (c)EDH"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
-Name: "magiccons"; Description: "Desktop Shortcut for non-EDH constructed"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
-Name: "magicsmp"; Description: "Desktop Shortcut for simple EDH (40 life and cast)"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
+Name: "gui"; Description: "Desktop Shortcut for OBS Key Listener GUI"; Components: gui
+Name: "vampire"; Description: "Desktop Shortcut for Vampire (cmd)"; GroupDescription: "{cm:OptForVtm}"; Flags: unchecked; Components: vampire
+Name: "magicedh"; Description: "Desktop Shortcut for (c)EDH (cmd)"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
+Name: "magiccons"; Description: "Desktop Shortcut for non-EDH constructed (cmd)"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
+Name: "magicsmp"; Description: "Desktop Shortcut for simple EDH (cmd, 40 life and cast)"; GroupDescription: "{cm:OptForMtg}"; Flags: unchecked; Components: magic
 
 [Files]
 Source: "{#SourcePath}\..\dist\listener\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -64,15 +67,19 @@ Source: "{#SourcePath}\..\config\*"; DestDir: "{commonappdata}\{#MyAppName}"; Fl
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
+; Start Menu - GUI
+Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:GUI}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "gui"; Components: gui; Flags: runhidden postinstall
+; Desktop - GUI
+Name: "{autodesktop}\{#MyAppName} {cm:GUI}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "gui"; Tasks: gui: runhidden
 ; Start Menu - Magic
-Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForEDH}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f edh"; Components: magic
-Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForCons}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f constructed"; Components: magic
-Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:Simple}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f simple"; Components: magic
+Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForEDH}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f edh"; Components: magic
+Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForCons}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f constructed"; Components: magic
+Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:Simple}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f simple"; Components: magic
 ; Start Menu - Vampire
-Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForVtm}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_vampire.yml -o vampire-obs.txt -f vampire"; Components: vampire
+Name: "{autoprograms}\{#MyAppName}\{cm:Lis} {cm:ForVtm}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_vampire.yml -o vampire-obs.txt -f vampire"; Components: vampire
 ; Desktop - Magic
-Name: "{autodesktop}\{#MyAppName} {cm:ForEDH}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f edh"; Tasks: magicedh
-Name: "{autodesktop}\{#MyAppName} {cm:ForCons}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f constructed"; Tasks: magiccons
-Name: "{autodesktop}\{#MyAppName} {cm:Simple}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_bindings.yml -o obs.txt -f simple"; Tasks: magicsmp
+Name: "{autodesktop}\{#MyAppName} {cm:ForEDH}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f edh"; Tasks: magicedh
+Name: "{autodesktop}\{#MyAppName} {cm:ForCons}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f constructed"; Tasks: magiccons
+Name: "{autodesktop}\{#MyAppName} {cm:Simple}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_bindings.yml -o obs.txt -f simple"; Tasks: magicsmp
 ; Desktop - Vampire
-Name: "{autodesktop}\{#MyAppName} {cm:ForVtm}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "-c default_vampire.yml -o vampire-obs.txt -f vampire"; Tasks: vampire
+Name: "{autodesktop}\{#MyAppName} {cm:ForVtm}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{commonappdata}\{#MyAppName}"; Parameters: "cli -c default_vampire.yml -o vampire-obs.txt -f vampire"; Tasks: vampire
